@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="Practice typing, measure your speed, and improve your accuracy with TypeFlow.">
+  <title>TypeFlow — Typing Speed Tester</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="#" aria-label="TypeFlow home">
+      <span class="brand-icon" aria-hidden="true">⌨</span>
+      <span>Type<span class="accent-text">Flow</span></span>
+    </a>
+    <span class="nav-label">TYPING PRACTICE</span>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">YOUR DAILY PRACTICE</p>
+      <h1>Find your <span class="accent-text">flow.</span></h1>
+      <p class="hero-description">
+        Build speed. Improve accuracy. One keystroke at a time.
+      </p>
+    </section>
+
+    <section class="settings-card card" aria-label="Test settings">
+      <div class="setting-group">
+        <label for="duration">TEST DURATION</label>
+        <select id="duration">
+          <option value="15">15 seconds</option>
+          <option value="30" selected>30 seconds</option>
+          <option value="60">60 seconds</option>
+          <option value="120">120 seconds</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label for="difficulty">DIFFICULTY</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <label class="sound-toggle" for="soundToggle">
+        <input type="checkbox" id="soundToggle">
+        <span class="toggle-track" aria-hidden="true"></span>
+        <span>Sound</span>
+      </label>
+
+      <button id="restartButton" class="button button-secondary" type="button">
+        <span aria-hidden="true">↻</span> Restart
+      </button>
+      <button id="newPassageButton" class="button button-primary" type="button">
+        New passage <span aria-hidden="true">→</span>
+      </button>
+    </section>
+
+    <section class="stats-grid" aria-label="Live typing statistics">
+      <article class="stat-card card">
+        <span class="stat-label">WPM</span>
+        <strong id="wpmStat" class="stat-value">0</strong>
+        <span class="stat-hint">Words per minute</span>
+      </article>
+
+      <article class="stat-card card">
+        <span class="stat-label">ACCURACY</span>
+        <strong id="accuracyStat" class="stat-value">100%</strong>
+        <span class="stat-hint">Correct characters</span>
+      </article>
+
+      <article class="stat-card card">
+        <span class="stat-label">CHARACTERS</span>
+        <strong id="charactersStat" class="stat-value">0/0</strong>
+        <span class="stat-hint">Correct / typed</span>
+      </article>
+
+      <article class="stat-card card">
+        <span class="stat-label">TIME LEFT</span>
+        <strong id="timeStat" class="stat-value">30<span class="stat-unit">s</span></strong>
+        <span class="stat-hint" id="timerHint">Ready when you are</span>
+      </article>
+    </section>
+
+    <section class="typing-card card" aria-labelledby="typingHeading">
+      <div class="typing-header">
+        <div>
+          <span class="section-kicker">THE CHALLENGE</span>
+          <h2 id="typingHeading">Type the passage below</h2>
+        </div>
+        <span class="status-pill" id="statusPill">Ready</span>
+      </div>
+
+      <div class="progress-track" aria-hidden="true">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+      <div id="typingArea" class="typing-area">
+        <div id="passageDisplay" class="passage-display"></div>
+        <textarea
+          id="typingInput"
+          class="typing-input"
+          aria-label="Type the displayed passage here"
+          aria-describedby="typingInstructions"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          maxlength="1000"
+          disabled
+        ></textarea>
+      </div>
+
+      <div class="typing-footer">
+        <p id="typingInstructions">
+          Select <strong>Start test</strong>, then type the passage as accurately as possible.
+        </p>
+        <button id="startButton" class="button button-primary" type="button">
+          Start test <span aria-hidden="true">→</span>
+        </button>
+      </div>
+      <p id="liveMessage" class="sr-only" aria-live="polite"></p>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="card personal-card">
+        <div class="card-heading">
+          <div>
+            <span class="section-kicker">YOUR PROGRESS</span>
+            <h2>Personal best</h2>
+          </div>
+          <span class="trophy-icon" aria-hidden="true">✦</span>
+        </div>
+
+        <div class="personal-stats">
+          <div>
+            <strong id="bestWpm">—</strong>
+            <span>Best WPM</span>
+          </div>
+          <div>
+            <strong id="bestAccuracy">—</strong>
+            <span>Best accuracy</span>
+          </div>
+        </div>
+        <p class="muted-text">Your best results are saved in this browser.</p>
+      </article>
+
+      <article class="card chart-card">
+        <div class="card-heading">
+          <div>
+            <span class="section-kicker">CONSISTENCY</span>
+            <h2>WPM history</h2>
+          </div>
+          <span id="historyCount" class="history-count">0 tests</span>
+        </div>
+        <div id="wpmChart" class="chart" role="img" aria-label="No typing test results yet">
+          <p class="chart-empty">Complete a test to see your progress.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="card instructions-card">
+      <span class="section-kicker">QUICK GUIDE</span>
+      <h2>How it works</h2>
+      <div class="instructions-grid">
+        <div class="instruction-item">
+          <span class="instruction-number">01</span>
+          <div>
+            <h3>Choose your challenge</h3>
+            <p>Select a duration and difficulty before starting.</p>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <span class="instruction-number">02</span>
+          <div>
+            <h3>Type what you see</h3>
+            <p>Green characters are correct; red characters need fixing.</p>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <span class="instruction-number">03</span>
+          <div>
+            <h3>Track your progress</h3>
+            <p>Review your WPM, accuracy, and personal bests after each test.</p>
+          </div>
+        </div>
+      </div>
+      <p class="keyboard-hint">
+        <kbd>Esc</kbd> Restart test
+        <span>·</span>
+        WPM = correct characters ÷ 5 ÷ elapsed minutes
+      </p>
+    </section>
+
+    <section id="resultsPanel" class="card results-panel" hidden aria-labelledby="resultsHeading">
+      <div class="results-heading">
+        <span class="results-spark" aria-hidden="true">✦</span>
+        <p class="eyebrow">SESSION COMPLETE</p>
+        <h2 id="resultsHeading">Your results</h2>
+        <p id="performanceMessage" class="hero-description"></p>
+      </div>
+
+      <div class="result-main">
+        <span>FINAL SPEED</span>
+        <strong id="finalWpm">0 <small>WPM</small></strong>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-stat">
+          <span>Accuracy</span>
+          <strong id="finalAccuracy">0%</strong>
+        </div>
+        <div class="result-stat">
+          <span>Correct characters</span>
+          <strong id="finalCorrect">0</strong>
+        </div>
+        <div class="result-stat">
+          <span>Incorrect characters</span>
+          <strong id="finalIncorrect">0</strong>
+        </div>
+        <div class="result-stat">
+          <span>Time taken</span>
+          <strong id="finalTime">0s</strong>
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <button id="tryAgainButton" class="button button-primary" type="button">
+          Try again <span aria-hidden="true">→</span>
+        </button>
+        <button id="returnButton" class="button button-secondary" type="button">
+          Return to typing
+        </button>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <a class="footer-brand" href="#">TypeFlow</a>
+      <p>Practice with purpose. Improve one word at a time.</p>
+      <p>© 2026 mujtabacloud. All rights reserved.</p>
+    </footer>
+  </main>
+</body>
+</html>
